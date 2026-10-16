@@ -39,11 +39,28 @@
         return crypto.subtle.deriveBits({ name: "PBKDF2", salt: ausB64(daten.s), iterations: daten.i, hash: "SHA-256" }, k, 256);
       });
   }
-  // Erst schreiben, wenn diese Seite fertig geladen ist – sonst hängt der Browser den Inhalt nur unten an.
+  // Entschlüsselte Seite einsetzen: Inhalt per DOMParser übernehmen und die Skripte danach der Reihe nach
+  // neu laden – so laufen sie verlässlich erst, wenn die ganze Seite steht (document.write tat das nicht immer).
   function anzeigen(html) {
-    function schreiben() { document.open(); document.write(html); document.close(); }
-    if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", schreiben); }
-    else { setTimeout(schreiben, 0); }
+    function einsetzen() {
+      var neu = new DOMParser().parseFromString(html, "text/html");
+      var skripte = [];
+      Array.prototype.forEach.call(neu.querySelectorAll("script"), function (s) {
+        var typ = (s.getAttribute("type") || "").toLowerCase();
+        if (!typ || typ === "text/javascript" || typ === "module") { skripte.push(s.getAttribute("src")); s.parentNode.removeChild(s); }
+      });
+      Array.prototype.slice.call(wurzel.attributes).forEach(function (a) { wurzel.removeAttribute(a.name); });
+      Array.prototype.forEach.call(neu.documentElement.attributes, function (a) { wurzel.setAttribute(a.name, a.value); });
+      document.head.innerHTML = neu.head.innerHTML;
+      document.body.replaceWith(document.importNode(neu.body, true));
+      document.title = neu.title;
+      skripte.forEach(function (src) {
+        if (!src) { return; }
+        var s = document.createElement("script"); s.src = src; s.async = false; document.body.appendChild(s);
+      });
+      if (location.hash) { var ziel = document.getElementById(location.hash.slice(1)); if (ziel) { ziel.scrollIntoView(); } }
+    }
+    if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", einsetzen); } else { einsetzen(); }
   }
 
   if (!window.crypto || !crypto.subtle || !window.TextEncoder) {

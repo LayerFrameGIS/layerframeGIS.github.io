@@ -21,6 +21,33 @@
     el.href = name === "kontakt" ? "mailto:" + wert : adresse(wert);
   });
 
+  // Sanftes Einblenden beim Scrollen – nur was beim Laden noch unterhalb des Bildschirms liegt
+  if ("IntersectionObserver" in window && !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) {
+    var beobachter = new IntersectionObserver(function (eintraege) {
+      eintraege.forEach(function (e) { if (e.isIntersecting) { e.target.classList.remove("wartet"); beobachter.unobserve(e.target); } });
+    }, { rootMargin: "0px 0px -8% 0px" });
+    document.querySelectorAll(".erscheinen").forEach(function (el) {
+      if (el.getBoundingClientRect().top > window.innerHeight) { el.classList.add("wartet"); beobachter.observe(el); }
+    });
+  }
+
+  // Knopf „Adresse kopieren“
+  document.querySelectorAll("[data-kopieren]").forEach(function (knopf) {
+    var original = knopf.textContent;
+    knopf.addEventListener("click", function () {
+      var wert = c[knopf.getAttribute("data-kopieren")] || "";
+      if (!wert) {
+        var link = document.querySelector('[data-lf="' + knopf.getAttribute("data-kopieren") + '"]');
+        wert = link ? link.textContent : "";
+      }
+      if (!navigator.clipboard) { return; }
+      navigator.clipboard.writeText(wert).then(function () {
+        knopf.textContent = knopf.getAttribute("data-kopiert");
+        setTimeout(function () { knopf.textContent = original; }, 1800);
+      });
+    });
+  });
+
   // Tooltip für Diagrammsegmente (Maus und Tastatur)
   var tipp = document.createElement("div");
   tipp.className = "tipp"; tipp.hidden = true; tipp.setAttribute("role", "status");
