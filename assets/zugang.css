@@ -1,0 +1,65 @@
+/* LayerFrame – Zugangsseite der Closed Beta (ergänzt style.css) */
+.zugang { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; position: relative;
+  isolation: isolate; }
+.zugang::before { content: ""; position: fixed; inset: 0; z-index: -2; background: var(--hoehen);
+  -webkit-mask: url("img/hoehenlinien.svg") center / cover no-repeat; mask: url("img/hoehenlinien.svg") center / cover no-repeat; }
+.zugang::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(ellipse at center, color-mix(in srgb, var(--papier) 82%, transparent) 0%, transparent 70%); }
+
+.zugang-buehne { flex: 1; display: grid; place-items: center; padding: 56px var(--rand) 24px; }
+
+/* Kartenrahmen mit Koordinaten – wie auf der Startseite */
+.zugang-rahmen { position: relative; width: 100%; max-width: 470px; padding: 22px; }
+.zugang-rahmen::before { content: ""; position: absolute; inset: 0; border: 1px solid var(--tinte-2); opacity: .32;
+  pointer-events: none; }
+.zugang-strich { position: absolute; background: var(--tinte-2); opacity: .45; }
+.zugang-strich.o, .zugang-strich.u { width: 1px; height: 9px; }
+.zugang-strich.o { top: -9px; } .zugang-strich.u { bottom: -9px; }
+.zugang-strich.l, .zugang-strich.r { height: 1px; width: 9px; }
+.zugang-strich.l { left: -9px; } .zugang-strich.r { right: -9px; }
+.zugang-koord { position: absolute; font: 500 .72rem/1 var(--schrift); color: var(--gedaempft); white-space: nowrap;
+  font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+.zugang-koord.o { top: -26px; transform: translateX(-50%); }
+.zugang-koord.l { left: -14px; transform: translate(-100%, -50%); }
+
+.zugang-karte { background: var(--flaeche); border: 1px solid var(--linie); border-radius: 14px;
+  box-shadow: var(--schatten); padding: clamp(24px, 5vw, 40px); }
+.lf-pruefen .zugang-karte { visibility: hidden; }
+
+.zugang-marke { display: flex; align-items: center; gap: 12px; margin: 0 0 28px; color: var(--tinte);
+  font: 600 1.35rem/1 var(--titel); letter-spacing: -.015em; }
+.zugang-marke svg { width: 40px; height: 40px; flex: none; }
+.zugang-abzeichen { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 14px; padding: 6px 11px;
+  border-radius: 999px; background: var(--akzent-hell); color: var(--akzent-dunkel);
+  font: 600 .76rem/1 var(--schrift); letter-spacing: .09em; text-transform: uppercase; }
+.zugang-abzeichen::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.zugang-karte h1 { font-size: clamp(1.7rem, 1.3rem + 1.6vw, 2.2rem); margin: 0 0 .45em; }
+.zugang-karte > p { color: var(--tinte-2); margin-bottom: 0; }
+
+.zugang-karte label { display: block; font-weight: 600; font-size: .92rem; margin: 24px 0 8px; }
+.zugang-zeile { display: flex; flex-direction: column; gap: 10px; }
+.zugang-zeile input { width: 100%; min-width: 0; min-height: 48px; padding: 10px 14px; border: 1px solid var(--linie);
+  border-radius: 8px; background: var(--flaeche-2); color: var(--tinte); text-transform: uppercase;
+  font: 500 1.02rem/1.2 ui-monospace, "Cascadia Mono", Consolas, monospace; letter-spacing: .08em; }
+.zugang-zeile input::placeholder { color: var(--gedaempft); opacity: .65; }
+.zugang-zeile input:focus { outline: none; border-color: var(--akzent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--akzent) 28%, transparent); }
+.zugang-zeile input[aria-invalid="true"] { border-color: var(--a-nicht); }
+.zugang-zeile .knopf { min-height: 48px; flex: 0 0 auto; justify-content: center; }
+.zugang-zeile .knopf:disabled { opacity: .7; cursor: progress; }
+.zugang-fehler { color: var(--a-nicht); font-size: .92rem; margin: 10px 0 0; }
+.zugang-leise { margin: 24px 0 0; padding-top: 18px; border-top: 1px solid var(--linie-2); font-size: .92rem;
+  color: var(--gedaempft); }
+
+.zugang-fuss { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 22px; padding: 20px var(--rand) 28px;
+  font-size: .9rem; }
+.zugang-fuss a { color: var(--gedaempft); }
+.zugang-fuss a:hover { color: var(--tinte); }
+
+.wackeln { animation: wackeln .36s ease; }
+@keyframes wackeln { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+@media (prefers-reduced-motion: reduce) { .wackeln { animation: none; } }
+@media (max-width: 560px) {
+  .zugang-rahmen { padding: 12px; }
+  .zugang-koord.l, .zugang-strich.l, .zugang-strich.r { display: none; }
+}
