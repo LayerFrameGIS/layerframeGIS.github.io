@@ -655,7 +655,8 @@ dialog.lupe button { position: fixed; top: 14px; right: 14px; border: 1px solid 
 
 /* 3D-Titelbild: ohne Rahmen, schwebt frei auf der Seite */
 .held-bild.held-titel { max-width: 1180px; margin: clamp(8px, 2vw, 24px) auto 0; padding: 0 var(--rand); }
-.held-bild.held-titel img { border: 0; border-radius: 0; box-shadow: none; width: 100%; height: auto; }
+.held-bild.held-titel img { border: 0; border-radius: 28px; box-shadow: 0 40px 90px -30px rgb(10 30 25 / .5); width: 100%; height: auto; background: #141917; }
+@media (prefers-color-scheme: dark) { .held-bild.held-titel img { border-radius: 0; box-shadow: none; } }
 
 .held-legende { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 26px; margin: 6px 0 0; padding: 0; font-size: .9rem; color: var(--gedaempft); }
 .held-legende li { display: flex; align-items: center; gap: 8px; }
