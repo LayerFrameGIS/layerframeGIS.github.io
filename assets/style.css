@@ -296,6 +296,7 @@ dialog.lupe button { position: fixed; top: 14px; right: 14px; border: 1px solid 
 .fuss a:hover { text-decoration: underline; color: var(--kopf-text); }
 .fuss nav { display: flex; flex-wrap: wrap; gap: 8px 20px; }
 .fuss p { margin: 0; }
+.fuss .marken { flex-basis: 100%; font-size: .8rem; opacity: .75; }
 
 @media (prefers-reduced-motion: no-preference) {
   .blatt .kartenrahmen { animation: auflegen .7s cubic-bezier(.2, .7, .2, 1) both .1s; }
