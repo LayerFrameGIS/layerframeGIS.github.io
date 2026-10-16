@@ -24,7 +24,7 @@
 
 .zugang-karte { background: var(--flaeche); border: 1px solid var(--linie); border-radius: 14px;
   box-shadow: var(--schatten); padding: clamp(24px, 5vw, 40px); }
-.lf-pruefen .zugang-karte { visibility: hidden; }
+.lf-pruefen .zugang-buehne, .lf-pruefen .zugang-fuss { visibility: hidden; }
 
 .zugang-marke { display: flex; align-items: center; gap: 12px; margin: 0 0 28px; color: var(--tinte);
   font: 600 1.35rem/1 var(--titel); letter-spacing: -.015em; }

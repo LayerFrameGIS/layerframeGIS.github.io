@@ -39,7 +39,12 @@
         return crypto.subtle.deriveBits({ name: "PBKDF2", salt: ausB64(daten.s), iterations: daten.i, hash: "SHA-256" }, k, 256);
       });
   }
-  function anzeigen(html) { document.open(); document.write(html); document.close(); }
+  // Erst schreiben, wenn diese Seite fertig geladen ist – sonst hängt der Browser den Inhalt nur unten an.
+  function anzeigen(html) {
+    function schreiben() { document.open(); document.write(html); document.close(); }
+    if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", schreiben); }
+    else { setTimeout(schreiben, 0); }
+  }
 
   if (!window.crypto || !crypto.subtle || !window.TextEncoder) {
     freigeben();
