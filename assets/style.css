@@ -653,3 +653,27 @@ dialog.lupe button { position: fixed; top: 14px; right: 14px; border: 1px solid 
 }
 .ki-band p, .held p, .kennzahl-band p { margin-left: auto; margin-right: auto; }
 
+
+/* Titel als Film: 3D-Flug aus LayerFrame, randlos */
+.held-film { position: relative; isolation: isolate; overflow: hidden; min-height: min(92vh, 980px); display: flex; flex-direction: column; justify-content: flex-start;
+  text-align: center; color: #fff; background: #0E1512; }
+.film-medien { position: absolute; inset: 0; z-index: -2; }
+.film-medien img, .film-medien video { width: 100%; height: 100%; object-fit: cover; object-position: 50% 55%; display: block;
+  animation: film-zoom 18s cubic-bezier(.2,.6,.2,1) both; }
+@keyframes film-zoom { from { transform: scale(1.12); } to { transform: scale(1); } }
+.held-film::before { content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(180deg, rgb(8 14 12 / .72) 0%, rgb(8 14 12 / .38) 30%, rgb(8 14 12 / 0) 52%, rgb(8 14 12 / 0) 80%, #141917 100%); }
+.film-inhalt { padding-top: clamp(64px, 10vw, 140px); }
+.held-film h1 { font-size: clamp(3.6rem, 1.6rem + 8vw, 8.5rem); letter-spacing: -.045em; line-height: .95; margin: 0 0 .18em; max-width: none; color: #fff;
+  text-shadow: 0 2px 30px rgb(0 0 0 / .25); }
+.held-film .held-abz { color: #7FE0BE; }
+.held-film .held-zeile { color: rgb(255 255 255 / .92); }
+.held-film .held-hinweis { color: rgb(255 255 255 / .75); }
+.held-film .pfeil-link { color: #fff; }
+.held-film .knopf.pille { background: #fff; color: #10201A; }
+.held-film .knopf.pille:hover { background: #E6F4EE; }
+.film-quelle { position: absolute; left: 0; right: 0; bottom: 18px; margin: 0 auto; max-width: none; font-size: .78rem; color: rgb(255 255 255 / .55); }
+@media (prefers-reduced-motion: reduce) { .film-medien img, .film-medien video { animation: none; } }
+@media (max-width: 700px) { .held-film { min-height: 78vh; } .film-medien img, .film-medien video { object-position: 50% 50%; } }
+
+.film-medien picture { display: block; width: 100%; height: 100%; }
