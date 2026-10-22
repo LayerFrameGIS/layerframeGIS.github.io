@@ -29,8 +29,6 @@ jobs:
         shell: bash
         run: |
           set +e
-          npx wrangler whoami > who.txt 2>&1
-          grep -iE "scope|permission|token|account" who.txt | head -n 25 | while IFS= read -r l; do echo "::notice::whoami: $l"; done
           npx wrangler deploy > log.txt 2>&1
           code=$?
           cat log.txt
@@ -43,8 +41,11 @@ jobs:
           RESEND_KEY: ${{ secrets.RESEND_KEY }}
         run: printf '%s' "$RESEND_KEY" | npx wrangler secret put RESEND_KEY
       - name: Testanfrage an hello@layerframe.at
+        shell: bash
         run: |
-          sleep 20
-          curl -sS --fail-with-body -X POST https://antrag.layerframe.at/ \
+          sleep 15
+          code=$(curl -sS -o antwort.txt -w "%{http_code}" -X POST https://antrag.layerframe.at/ \
             -H "Origin: https://layerframe.at" -H "Content-Type: application/json" \
-            -d '{"name":"Test LayerFrame (automatisch)","mail":"hello@layerframe.at","org":"GitHub Actions","vorhaben":"Testanfrage nach dem Veroeffentlichen","sprache":"de"}'
+            -d '{"name":"Test LayerFrame (automatisch)","mail":"hello@layerframe.at","org":"GitHub Actions","vorhaben":"Testanfrage nach dem Veroeffentlichen","sprache":"de"}')
+          echo "::notice::Test HTTP $code: $(head -c 300 antwort.txt)"
+          [ "$code" = "200" ]

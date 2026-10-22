@@ -58,7 +58,11 @@ export default {
       body: JSON.stringify({ from: env.ABSENDER, to: [env.EMPFAENGER], reply_to: d.mail,
         subject: "Zugang anfordern: " + d.name + (d.org ? " (" + d.org + ")" : ""), text }),
     });
-    if (!r.ok) return antwort({ ok: false, fehler: "versand" }, 502, kopf);
+    if (!r.ok) {
+      let grund = "";
+      try { const j = await r.json(); grund = String(j.message || j.name || "").slice(0, 160); } catch { /* egal */ }
+      return antwort({ ok: false, fehler: "versand", status: r.status, grund }, 502, kopf);
+    }
     return antwort({ ok: true }, 200, kopf);
   },
 };
