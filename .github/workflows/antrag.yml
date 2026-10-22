@@ -26,7 +26,18 @@ jobs:
           test -n "$RESEND_KEY" || { echo "::error::Secret RESEND_KEY fehlt"; exit 1; }
       - run: npm install --no-audit --no-fund
       - name: Worker veroeffentlichen
-        run: npx wrangler deploy
+        shell: bash
+        run: |
+          set +e
+          npx wrangler whoami > who.txt 2>&1
+          grep -iE "scope|permission|token|account" who.txt | head -n 25 | while IFS= read -r l; do echo "::notice::whoami: $l"; done
+          npx wrangler deploy > log.txt 2>&1
+          code=$?
+          cat log.txt
+          if [ $code -ne 0 ]; then
+            grep -vE "^\s*$" log.txt | tail -n 25 | while IFS= read -r l; do echo "::error::$l"; done
+            exit $code
+          fi
       - name: Resend-Schluessel eintragen
         env:
           RESEND_KEY: ${{ secrets.RESEND_KEY }}
