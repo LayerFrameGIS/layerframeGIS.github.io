@@ -21,6 +21,11 @@
     el.href = name === "kontakt" ? "mailto:" + wert : adresse(wert);
   });
 
+  // Download ab einem Datum freischalten (data-ab zeigt, data-bis verbirgt)
+  var jetzt = Date.now();
+  document.querySelectorAll("[data-ab]").forEach(function (el) { if (jetzt >= Date.parse(el.getAttribute("data-ab") + "T00:00:00")) { el.hidden = false; } });
+  document.querySelectorAll("[data-bis]").forEach(function (el) { if (jetzt >= Date.parse(el.getAttribute("data-bis") + "T00:00:00")) { el.hidden = true; } });
+
   // Sanftes Einblenden beim Scrollen – nur was beim Laden noch unterhalb des Bildschirms liegt
   if ("IntersectionObserver" in window && !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) {
     var beobachter = new IntersectionObserver(function (eintraege) {
