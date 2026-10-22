@@ -1,0 +1,39 @@
+name: Antrag-Dienst veroeffentlichen
+on:
+  push:
+    branches: [main]
+    paths: ["dienste/antrag/**", ".github/workflows/antrag.yml"]
+  workflow_dispatch:
+jobs:
+  veroeffentlichen:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dienste/antrag
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: 250c16e3e2e0031aca26b998182dfe4c
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Pruefen, ob die Schluessel hinterlegt sind
+        env:
+          RESEND_KEY: ${{ secrets.RESEND_KEY }}
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "::error::Secret CLOUDFLARE_API_TOKEN fehlt"; exit 1; }
+          test -n "$RESEND_KEY" || { echo "::error::Secret RESEND_KEY fehlt"; exit 1; }
+      - run: npm install --no-audit --no-fund
+      - name: Worker veroeffentlichen
+        run: npx wrangler deploy
+      - name: Resend-Schluessel eintragen
+        env:
+          RESEND_KEY: ${{ secrets.RESEND_KEY }}
+        run: printf '%s' "$RESEND_KEY" | npx wrangler secret put RESEND_KEY
+      - name: Testanfrage an hello@layerframe.at
+        run: |
+          sleep 20
+          curl -sS --fail-with-body -X POST https://antrag.layerframe.at/ \
+            -H "Origin: https://layerframe.at" -H "Content-Type: application/json" \
+            -d '{"name":"Test LayerFrame (automatisch)","mail":"hello@layerframe.at","org":"GitHub Actions","vorhaben":"Testanfrage nach dem Veroeffentlichen","sprache":"de"}'

@@ -1,0 +1,17 @@
+name = "layerframe-antrag"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+workers_dev = false
+preview_urls = false
+
+routes = [
+  { pattern = "antrag.layerframe.at", custom_domain = true }
+]
+
+[vars]
+EMPFAENGER = "hello@layerframe.at"
+ABSENDER = "LayerFrame Website <onboarding@resend.dev>"
+ERLAUBT = "https://layerframe.at,https://www.layerframe.at"
+
+[observability]
+enabled = false
