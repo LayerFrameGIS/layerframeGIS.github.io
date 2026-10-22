@@ -79,11 +79,11 @@
 
   // ---------- Reiter ----------
   var reiter = Array.prototype.slice.call(document.querySelectorAll(".z-tabs [role=tab]"));
+  var zustand = "form";  // form | ok | fallback
   var antrag = document.getElementById("z-antrag");
+  var ok = document.getElementById("z-ok");
   var gesendet = document.getElementById("z-gesendet");
-  var istGesendet = false, aktiv = "antrag";
   function zeigeReiter(name, fokus) {
-    aktiv = name;
     reiter.forEach(function (r) {
       var an = r.getAttribute("data-reiter") === name;
       r.setAttribute("aria-selected", an ? "true" : "false");
@@ -91,8 +91,9 @@
       if (an && fokus) { r.focus(); }
     });
     form.hidden = name !== "code";
-    antrag.hidden = name !== "antrag" || istGesendet;
-    gesendet.hidden = name !== "antrag" || !istGesendet;
+    antrag.hidden = name !== "antrag" || zustand !== "form";
+    ok.hidden = name !== "antrag" || zustand !== "ok";
+    gesendet.hidden = name !== "antrag" || zustand !== "fallback";
   }
   reiter.forEach(function (r, i) {
     r.addEventListener("click", function () { zeigeReiter(r.getAttribute("data-reiter")); if (r.getAttribute("data-reiter") === "code") { feld.focus(); } });
@@ -103,11 +104,25 @@
     });
   });
 
-  // ---------- Zugang beantragen (per E-Mail) ----------
+  // ---------- Zugang anfordern: direkt an LayerFrame senden, sonst E-Mail vorbereiten ----------
   var an = antrag.getAttribute("data-an");
+  var ziel = antrag.getAttribute("data-ziel");
   var antragText = "", antragBetreff = "";
+  var sendenKnopf = antrag.querySelector("button[type=submit]");
+  var sendenText = sendenKnopf.textContent;
   function wert(name) { var el = antrag.elements[name]; return el ? String(el.value || "").trim() : ""; }
   function wahlText(name) { var el = antrag.elements[name]; return el && el.selectedIndex > 0 ? el.options[el.selectedIndex].text : ""; }
+  function fallback() {
+    var q = "?subject=" + encodeURIComponent(antragBetreff) + "&body=" + encodeURIComponent(antragText);
+    document.getElementById("z-text").textContent = antragText;
+    document.getElementById("z-gmail").href = "https://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(an) +
+      "&su=" + encodeURIComponent(antragBetreff) + "&body=" + encodeURIComponent(antragText);
+    document.getElementById("z-outlook").href = "https://outlook.live.com/mail/0/deeplink/compose?to=" + encodeURIComponent(an) +
+      "&subject=" + encodeURIComponent(antragBetreff) + "&body=" + encodeURIComponent(antragText);
+    zustand = "fallback"; zeigeReiter("antrag");
+    gesendet.querySelector("h2").focus();
+    location.href = "mailto:" + an + q;
+  }
   antrag.addEventListener("submit", function (e) {
     e.preventDefault();
     var t = JSON.parse(antrag.getAttribute("data-texte"));
@@ -118,18 +133,23 @@
     if (wert("vorhaben")) { zeilen.push("", t.vorhaben + ":", wert("vorhaben")); }
     zeilen.push("", t.sprache, "", t.fuss);
     antragText = zeilen.join("\n");
-    var q = "?subject=" + encodeURIComponent(antragBetreff) + "&body=" + encodeURIComponent(antragText);
-    document.getElementById("z-text").textContent = antragText;
-    document.getElementById("z-gmail").href = "https://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(an) +
-      "&su=" + encodeURIComponent(antragBetreff) + "&body=" + encodeURIComponent(antragText);
-    document.getElementById("z-outlook").href = "https://outlook.live.com/mail/0/deeplink/compose?to=" + encodeURIComponent(an) +
-      "&subject=" + encodeURIComponent(antragBetreff) + "&body=" + encodeURIComponent(antragText);
-    istGesendet = true;
-    zeigeReiter("antrag");
-    gesendet.querySelector("h2").focus();
-    location.href = "mailto:" + an + q;
+    if (!ziel || !window.fetch) { fallback(); return; }
+    sendenKnopf.disabled = true; sendenKnopf.textContent = antrag.getAttribute("data-sendet");
+    var nutzlast = { name: wert("name"), mail: wert("mail"), org: wert("org"), einsatz: wahlText("einsatz"), vorhaben: wert("vorhaben"),
+      sprache: wurzel.getAttribute("lang") || "de", website: wert("website") };
+    var abbruch = window.AbortController ? new AbortController() : null;
+    var uhr = setTimeout(function () { if (abbruch) { abbruch.abort(); } }, 12000);
+    fetch(ziel, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(nutzlast), signal: abbruch ? abbruch.signal : undefined })
+      .then(function (r) { if (!r.ok) { throw new Error("status " + r.status); } return r.json(); })
+      .then(function (d) {
+        if (!d || !d.ok) { throw new Error("antwort"); }
+        zustand = "ok"; antrag.reset(); zeigeReiter("antrag"); ok.querySelector("h2").focus();
+      })
+      .catch(function () { fallback(); })
+      .then(function () { clearTimeout(uhr); sendenKnopf.disabled = false; sendenKnopf.textContent = sendenText; });
   });
-  document.getElementById("z-zurueck").addEventListener("click", function () { istGesendet = false; zeigeReiter("antrag"); });
+  document.getElementById("z-zurueck").addEventListener("click", function () { zustand = "form"; zeigeReiter("antrag"); });
+  document.getElementById("z-neu").addEventListener("click", function () { zustand = "form"; zeigeReiter("antrag"); });
   gesendet.querySelectorAll("[data-kopie]").forEach(function (k) {
     var original = k.textContent;
     k.addEventListener("click", function () {
