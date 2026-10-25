@@ -21,10 +21,18 @@
     el.href = name === "kontakt" ? "mailto:" + wert : adresse(wert);
   });
 
-  // Download ab einem Datum freischalten (data-ab zeigt, data-bis verbirgt)
-  var jetzt = Date.now();
-  document.querySelectorAll("[data-ab]").forEach(function (el) { if (jetzt >= Date.parse(el.getAttribute("data-ab") + "T00:00:00")) { el.hidden = false; } });
-  document.querySelectorAll("[data-bis]").forEach(function (el) { if (jetzt >= Date.parse(el.getAttribute("data-bis") + "T00:00:00")) { el.hidden = true; } });
+  // Download freischalten, sobald config.js downloadAktiv: true hat
+  document.querySelectorAll("[data-dl-aktiv]").forEach(function (el) { el.hidden = !c.downloadAktiv; });
+  document.querySelectorAll("[data-dl-bald]").forEach(function (el) { el.hidden = !!c.downloadAktiv; });
+  // Bildschirmfotos (z. B. SmartScreen) aus config.js einsetzen; ohne Eintrag bleibt der Platzhalter
+  document.querySelectorAll("[data-lf-bild]").forEach(function (fig) {
+    var pfad = c[fig.getAttribute("data-lf-bild")];
+    var platz = fig.querySelector(".ss-platz");
+    if (!pfad || !platz) { return; }
+    var img = document.createElement("img");
+    img.src = adresse(pfad); img.alt = (fig.querySelector("figcaption") || {}).textContent || ""; img.loading = "lazy";
+    platz.replaceWith(img);
+  });
 
   // Sanftes Einblenden beim Scrollen – nur was beim Laden noch unterhalb des Bildschirms liegt
   if ("IntersectionObserver" in window && !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) {
