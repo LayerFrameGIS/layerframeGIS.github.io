@@ -6,14 +6,14 @@ window.LAYERFRAME = {
   // Kontaktadresse für Feedback, Fragen und Impressum
   kontakt: "hello@layerframe.at",
 
-  // Download (GitHub-Release LayerFrameGIS/downloads). Erst auf true setzen, wenn das Release online ist.
-  downloadAktiv: false,
+  // Download (GitHub-Release LayerFrameGIS/downloads, Closed Beta v1.0.0 – online seit 25.10.2026).
+  downloadAktiv: true,
   setupOffline: "https://github.com/LayerFrameGIS/downloads/releases/latest/download/LayerFrame-Setup-Beta-v1.0.0-offline.exe",
-  setupOfflineGroesse: "",   // z. B. "1,2 GB" – nach dem Installer-Bau eintragen
-  setupOfflineSha: "",       // SHA-256 – nach dem Installer-Bau eintragen
+  setupOfflineGroesse: "468 MB",
+  setupOfflineSha: "c5d68c846d03d9af081d50d60c57a635e61c4b78978f5141f9369ac18d2bb0e8",
   setupWeb: "https://github.com/LayerFrameGIS/downloads/releases/latest/download/LayerFrame-Setup-Beta-v1.0.0-web.exe",
-  setupWebGroesse: "",
-  setupWebSha: "",
+  setupWebGroesse: "212 MB",
+  setupWebSha: "2931800085a7009e56d419d13c34cce3091281579b6937d93674cef173984f5b",
   // SmartScreen-Bildschirmfotos (Pfad relativ zur Website, z. B. "assets/img/smartscreen_1_de.webp")
   smartscreen1: "",
   smartscreen2: "",
