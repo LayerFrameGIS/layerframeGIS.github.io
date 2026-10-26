@@ -755,3 +755,14 @@ button.knopf, .knopf { font-family: var(--schrift); font-size: 1rem; cursor: poi
 .anich-film img { display: block; width: 100%; height: auto; border-radius: 12px; background: var(--flaeche);
   box-shadow: 0 30px 70px -30px rgb(0 0 0 / .55); }
 .anich-film figcaption { margin-top: 12px; font-size: .84rem; color: rgb(255 255 255 / .72); }
+
+
+/* Download: Installer ohne Kasten und Linien, wie die übrigen Abschnitte (Nutzer 26.10.) */
+.wahl { gap: 56px; }
+.wahl > div, .wahl > div.empfohlen { border: 0; border-radius: 0; box-shadow: none; background: none; padding: 0; }
+.wahl .rand { margin: 0 0 10px; }
+.wahl h2 { margin-bottom: 8px; }
+.wahl .datei { margin: 16px 0 12px; word-break: normal; overflow-wrap: anywhere; }
+.dl-daten { gap: 6px 18px; margin: 0 0 22px; }
+.wahl .knopf { margin-top: 0; }
+@media (max-width: 760px) { .wahl { gap: 44px; } }
