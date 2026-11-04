@@ -163,7 +163,7 @@
 
   // ---------- Werkzeug: Symbologie ----------
   var KAT = ["#E0A23B", "#7B68C8", "#2E8B7A", "#D9655B"];
-  var RAMPEN = { gruen: ["#D7EBDF", "#1E6B5A"], blau: ["#D6E6F5", "#1F5F99"], orange: ["#FBE3C8", "#C2571A"] };
+  var RAMPEN = { gruen: ["#D7EBDF", "#25472A"], blau: ["#D6E6F5", "#1F5F99"], orange: ["#FBE3C8", "#C2571A"] };
   function mischen(a, b, t) {
     var p = function (h, i) { return parseInt(h.substr(1 + 2 * i, 2), 16); };
     return "#" + [0, 1, 2].map(function (i) { return Math.round(p(a, i) + (p(b, i) - p(a, i)) * t).toString(16).padStart(2, "0"); }).join("");
@@ -317,7 +317,7 @@
   }
 
   // ---------- Werkzeug: KI-Assistent ----------
-  var FUNKEN = '<svg viewBox="0 0 26 26" aria-hidden="true" style="color:inherit"><rect width="26" height="26" rx="6" fill="#1E6B5A"/><path d="M3 20.3c3.8-.9 5.8-2.8 8.8-2.8s4.8 1.8 9.6 1.6" fill="none" stroke="#FFFFFF" stroke-opacity="0.6" stroke-width="1.4" stroke-linecap="round"/><path d="M3 23.4c3.8 0 6.4-2.6 9.6-2.6s5.2 1.8 10.4 1.6" fill="none" stroke="#FFFFFF" stroke-opacity="0.6" stroke-width="1.4" stroke-linecap="round"/><path d="M4.4 18L10 8.8l5.6 9.2" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="8.8" r="1.9" fill="#F0B050"/><circle cx="19.1" cy="6.9" r="5.4" fill="none" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="1.3"/><ellipse cx="19.1" cy="6.9" rx="2.27" ry="5.4" fill="none" stroke="#FFFFFF" stroke-opacity="0.5" stroke-width="1"/><path d="M13.7 6.9h10.8M14.42 4.2h9.36M14.42 9.6h9.36" stroke="#FFFFFF" stroke-opacity="0.5" stroke-width="1"/></svg>';
+  var FUNKEN = '<svg aria-hidden="true" style="color:inherit" viewBox="0 0 26 26"><rect x=".5" y=".5" width="25" height="25" rx="6" fill="#FFFFFF" stroke="#C9CED2" stroke-width="0.8"/><path d="M3 20.3c3.8-.9 5.8-2.8 8.8-2.8s4.8 1.8 9.6 1.6" fill="none" stroke="#879A8A" stroke-width="1.4" stroke-linecap="round"/><path d="M3 23.4c3.8 0 6.4-2.6 9.6-2.6s5.2 1.8 10.4 1.6" fill="none" stroke="#879A8A" stroke-width="1.4" stroke-linecap="round"/><path d="M4.4 18L10 8.8l5.6 9.2" fill="none" stroke="#25472A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="8.8" r="1.9" fill="#F0B050"/><circle cx="19.1" cy="6.9" r="5.4" fill="none" stroke="#25472A" stroke-width="1.2"/><ellipse cx="19.1" cy="6.9" rx="2.27" ry="5.4" fill="none" stroke="#879A8A" stroke-width="0.9"/><path d="M13.7 6.9h10.8M14.42 4.2h9.36M14.42 9.6h9.36" stroke="#879A8A" stroke-width="0.9"/></svg>';
   var PFEIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>';
   var HAKEN = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   function ki() {
